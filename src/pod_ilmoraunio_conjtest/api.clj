@@ -1,4 +1,4 @@
-(ns pod-ilmoraunio-cljconf.api
+(ns pod-ilmoraunio-conjtest.api
   (:require [pod.ilmoraunio.conftest :as conftest]
             [babashka.fs :as fs]
             [cheshire.core :as json]

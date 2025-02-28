@@ -1,4 +1,4 @@
-BUILD_FILES=babashka-1.3.191-macos-aarch64.tar.gz target target/pod-ilmoraunio-cljconf.jar pod-ilmoraunio-cljconf
+BUILD_FILES=babashka-1.3.191-macos-aarch64.tar.gz target target/pod-ilmoraunio-conjtest.jar pod-ilmoraunio-conjtest
 
 pod-ilmoraunio-conftest/pod-ilmoraunio-conftest:
 	@make -C pod-ilmoraunio-conftest
