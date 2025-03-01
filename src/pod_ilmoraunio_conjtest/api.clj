@@ -84,28 +84,28 @@
          parseable-files-with-conftest-parser false}
         (group-by #(boolean (supported-native-parser (or parser (fs/extension %))))
                   (apply ls-files filenames))]
-    (let [files-parsed-with-native-parser (->> (pmap (fn [f]
-                                                       (let [filename (str f)
-                                                             parser (or parser (fs/extension f))
-                                                             contents (slurp filename)]
-                                                         {filename (case parser
-                                                                     "json" (json/decode contents
-                                                                                         (fn [k]
-                                                                                           (cond
-                                                                                             (clojure.string/starts-with? k "@") k
-                                                                                             :else (keyword k))))
-                                                                     "edn" (edn-read contents)
-                                                                     ("yaml" "yml") (let [parsed (yaml/parse-string contents {:unknown-tag-fn :value
-                                                                                                                              :load-all true
-                                                                                                                              :key-fn (fn [{:keys [key]}]
-                                                                                                                                        (cond
-                                                                                                                                          (clojure.string/starts-with? key "@") key
-                                                                                                                                          (re-find #":" key) key
-                                                                                                                                          :else (keyword key)))})]
-                                                                                      (if (= (count parsed) 1)
-                                                                                        (first parsed)
-                                                                                        parsed)))}))
-                                                     parseable-files-with-native-parser)
+    (let [files-parsed-with-native-parser (->> (map (fn [f]
+                                                      (let [filename (str f)
+                                                            parser (or parser (fs/extension f))
+                                                            contents (slurp filename)]
+                                                        {filename (case parser
+                                                                    "json" (json/decode contents
+                                                                                        (fn [k]
+                                                                                          (cond
+                                                                                            (clojure.string/starts-with? k "@") k
+                                                                                            :else (keyword k))))
+                                                                    "edn" (edn-read contents)
+                                                                    ("yaml" "yml") (let [parsed (yaml/parse-string contents {:unknown-tag-fn :value
+                                                                                                                             :load-all true
+                                                                                                                             :key-fn (fn [{:keys [key]}]
+                                                                                                                                       (cond
+                                                                                                                                         (clojure.string/starts-with? key "@") key
+                                                                                                                                         (re-find #":" key) key
+                                                                                                                                         :else (keyword key)))})]
+                                                                                     (if (= (count parsed) 1)
+                                                                                       (first parsed)
+                                                                                       parsed)))}))
+                                                    parseable-files-with-native-parser)
                                                (mapcat identity)
                                                (into {}))
           files-parsed-with-conftest-parser (if (seq parseable-files-with-conftest-parser)
