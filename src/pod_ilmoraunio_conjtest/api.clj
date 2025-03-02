@@ -4,7 +4,8 @@
             [cheshire.core :as json]
             [clj-yaml.core :as yaml]
             [clojure.edn :as edn]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [clojure.string :as str])
   (:import (java.io PushbackReader)))
 
 (def supported-native-parser #{"json" "edn" "yaml" "yml"})
@@ -14,21 +15,24 @@
   (edn/read {:default #(str "#" %1 " " %2)} (PushbackReader. (io/reader (.getBytes s)))))
 
 (defn ls-files
-  [& dir-or-filename]
+  [& dirs-or-filenames]
   (mapcat #(if (fs/directory? %)
              (fs/list-dirs [%] (fn [p] (and (fs/regular-file? p) (not (fs/executable? p)))))
              (let [[relative-path filename] (split-with
                                               (partial = "..")
-                                              (clojure.string/split
+                                              (str/split
                                                 (str (fs/relativize
                                                        (fs/cwd)
                                                        (fs/canonicalize %)))
                                                 #"/"))]
-               (filter fs/regular-file?
-                       (fs/glob (clojure.string/join "/" relative-path)
-                                (clojure.string/join "/" filename)
-                                {:hidden true}))))
-          dir-or-filename))
+               (let [filepath (str/join "/" filename)]
+                 (if (re-find #"\*" filepath)
+                   (filter fs/regular-file?
+                           (fs/glob (str/join "/" relative-path)
+                                    filepath
+                                    {:hidden true}))
+                   [(fs/file filepath)]))))
+          dirs-or-filenames))
 
 (defn parse-go
   "Attempts to parse `filenames` using only Go parsers. Will automatically try to determine parser based on filename extension.
