@@ -127,7 +127,7 @@
                (conj files-parsed-with-conftest-parser))))))
 
 (defn parse
-  "Attempts to parse `filenames` using either Clojure or Go parsers (in this order, whichever succeeds first).
+  "Attempts to parse `filenames` using either Clojure or Go parsers (in this order, whichever is supported).
    Will automatically try to determine parser based on filename extension.
 
    Currently supported Clojure parsers: edn, json, yaml.
@@ -153,7 +153,7 @@
   (apply -parse nil filenames))
 
 (defn parse-as
-  "Attempts to parse `filenames` using `parser`, either using Clojure or Go parser (in this order, whichever succeeds first).
+  "Attempts to parse `filenames` using `parser`, either using Clojure or Go parser (in this order, whichever is supported).
 
    Currently supported Clojure parsers: edn, json, yaml.
    Currently supported Go parsers: cue, dockerfile, edn, hcl1, hcl2, ignore, ini, json, jsonnet, properties, spdx, toml, vcl, xml, yaml, dotenv.
