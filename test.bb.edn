@@ -1,9 +1,17 @@
 {:tasks
- {test:bb {:extra-paths ["test"]
-           :extra-deps {io.github.cognitect-labs/test-runner
-                        {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
-           :task (exec 'cognitect.test-runner.api/test)
-           :exec-args {:dirs ["test"]}
-           :org.babashka/cli {:coerce {:nses [:symbol]
-                                       :vars [:symbol]}}}}}
+ {test:integration {:extra-deps {:pods {ilmoraunio/conftest {:version "0.0.2"}}}
+                    :extra-paths ["src" "test"]
+                    :extra-deps {io.github.cognitect-labs/test-runner
+                                 {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+                    :task (exec 'cognitect.test-runner.api/test)
+                    :exec-args {:dirs ["test"]}
+                    :org.babashka/cli {:coerce {:nses [:symbol]
+                                                :vars [:symbol]}}}
+  test:cli {:extra-paths ["cli-test"]
+            :extra-deps {io.github.cognitect-labs/test-runner
+                         {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+            :task (exec 'cognitect.test-runner.api/test)
+            :exec-args {:dirs ["test"]}
+            :org.babashka/cli {:coerce {:nses [:symbol]
+                                        :vars [:symbol]}}}}}
 
