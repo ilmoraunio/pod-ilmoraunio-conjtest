@@ -14,24 +14,35 @@
   [s]
   (edn/read {:default #(str "#" %1 " " %2)} (PushbackReader. (io/reader (.getBytes s)))))
 
+(defn list-dirs
+  [f]
+  (fs/list-dirs [f]
+                (fn [p] (and (fs/regular-file? p) (not (fs/executable? p))))))
+
 (defn ls-files
   [& dirs-or-filenames]
   (mapcat #(if (fs/directory? %)
-             (fs/list-dirs [%] (fn [p] (and (fs/regular-file? p) (not (fs/executable? p)))))
-             (let [[relative-path filename] (split-with
-                                              (partial = "..")
-                                              (str/split
-                                                (str (fs/relativize
-                                                       (fs/cwd)
-                                                       (fs/canonicalize %)))
-                                                #"/"))]
-               (let [filepath (str/join "/" filename)]
+             (list-dirs %)
+             (let [[relative-paths filename :as full-path] (split-with
+                                                             (partial = "..")
+                                                             (str/split
+                                                               (str (fs/relativize
+                                                                      (fs/cwd)
+                                                                      (fs/canonicalize %)))
+                                                               #"/"))]
+               (let [relative-path (str/join "/" relative-paths)
+                     filepath (str/join "/" filename)]
                  (if (re-find #"\*" filepath)
-                   (filter fs/regular-file?
-                           (fs/glob (str/join "/" relative-path)
-                                    filepath
-                                    {:hidden true}))
-                   [(fs/file filepath)]))))
+                   (let [{regular-files [true false]
+                          directories [false true]}
+                         (group-by (juxt fs/regular-file?
+                                         fs/directory?)
+                                   (fs/glob relative-path
+                                            filepath
+                                            {:hidden true}))]
+                     (cond-> (into (sorted-set) (mapcat list-dirs directories))
+                       (some? regular-files) (into regular-files)))
+                   [(fs/file (str/join "/" (mapcat identity full-path)))]))))
           dirs-or-filenames))
 
 (defn parse-go
