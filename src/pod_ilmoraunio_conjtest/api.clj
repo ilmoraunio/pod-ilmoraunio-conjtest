@@ -14,10 +14,15 @@
   [s]
   (edn/read {:default #(str "#" %1 " " %2)} (PushbackReader. (io/reader (.getBytes s)))))
 
+(defn list-dirs
+  [f]
+  (fs/list-dirs [f]
+                (fn [p] (and (fs/regular-file? p) (not (fs/executable? p))))))
+
 (defn ls-files
   [& dirs-or-filenames]
   (mapcat #(if (fs/directory? %)
-             (fs/list-dirs [%] (fn [p] (and (fs/regular-file? p) (not (fs/executable? p)))))
+             (list-dirs %)
              (let [[relative-paths filename :as full-path] (split-with
                                                              (partial = "..")
                                                              (str/split
@@ -28,10 +33,15 @@
                (let [relative-path (str/join "/" relative-paths)
                      filepath (str/join "/" filename)]
                  (if (re-find #"\*" filepath)
-                   (filter fs/regular-file?
-                           (fs/glob relative-path
-                                    filepath
-                                    {:hidden true}))
+                   (let [{regular-files [true false]
+                          directories [false true]}
+                         (group-by (juxt fs/regular-file?
+                                         fs/directory?)
+                                   (fs/glob relative-path
+                                            filepath
+                                            {:hidden true}))]
+                     (cond-> (into (sorted-set) (mapcat list-dirs directories))
+                       (some? regular-files) (into regular-files)))
                    [(fs/file (str/join "/" (mapcat identity full-path)))]))))
           dirs-or-filenames))
 

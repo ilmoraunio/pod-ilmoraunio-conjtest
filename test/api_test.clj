@@ -1,8 +1,24 @@
 (ns api-test
   (:require [babashka.fs :as fs]
             [clojure.string :as str]
-            [clojure.test :refer [deftest is testing]]
+            [clojure.test :refer [deftest is testing use-fixtures]]
             [pod-ilmoraunio-conjtest.api :as api]))
+
+(defn create-file
+  []
+  (fs/create-file "../file.test"))
+
+(defn delete-file
+  []
+  (fs/delete "../file.test"))
+
+(defn file-fixture
+  [f]
+  (create-file)
+  (f)
+  (delete-file))
+
+(use-fixtures :once file-fixture)
 
 (defn ls-files
   [& args]
@@ -19,6 +35,7 @@
                (ls-files "test-resources/*.json"))))
       (testing "no filename, directory given"
         (is (= ["./test.bb.edn"
+                "./cli-test.bb.edn"
                 "./LICENSE"
                 "./CHANGELOG.md"
                 "./deps.edn"
@@ -46,9 +63,10 @@
         (is (= ["test-resources/test.json"]
                (ls-files "*/*.json")))
         (is (= ["pod-ilmoraunio-conftest/test-resources/test.json" "test-resources/test.json"]
-               (ls-files "**/*.json"))))
+               (ls-files "**/*.json")))
+        (is (= ["pod-ilmoraunio-conftest/test-resources/hocon.conf" "test-resources/hocon/hocon.conf"]
+               (ls-files "**/hocon*"))))
       (testing "no filename, directory given"
-        ;; FIXME
         (is (= ["test-resources/yaml/combine.yaml"
                 "test-resources/yaml/lambda.yaml"]
                (ls-files "**/yaml")))))
@@ -57,11 +75,10 @@
         (is (= ["bb.edn"]
                (ls-files "bb.edn"))))
       (testing "wildcard in filename"
-        (is (= ["test.bb.edn" "deps.edn" "bb.edn" "bb.ci.edn"]
+        (is (= ["bb.ci.edn" "bb.edn" "cli-test.bb.edn" "deps.edn" "test.bb.edn"]
                (ls-files "*.edn"))))))
 
   (testing "relative, backtracking paths"
-    (fs/create-file "../file.test")
     (testing "no directory wildcard"
       (testing "static filename"
         (is (= ["../file.test"]
@@ -71,7 +88,7 @@
       (testing "wildcard in filename"
         (is (= ["../file.test"]
                (ls-files "../*.test")))
-        (is (= ["test.bb.edn" "deps.edn" "bb.edn" "bb.ci.edn"]
+        (is (= ["bb.ci.edn" "bb.edn" "cli-test.bb.edn" "deps.edn" "test.bb.edn"]
                (ls-files "test-resources/../*.edn"))))
       (testing "no filename, directory given"
         (is (= ["../pod-ilmoraunio-conjtest/test-resources/yaml/combine.yaml"
@@ -89,20 +106,18 @@
         (is (= ["pod-ilmoraunio-conftest/test-resources/hocon.conf" "test-resources/hocon/hocon.conf"]
                (ls-files "../pod-ilmoraunio-conjtest/**/*.conf"))))
       (testing "no filename, directory given"
-        ;; FIXME
         (is (= ["test-resources/yaml/combine.yaml"
                 "test-resources/yaml/lambda.yaml"]
                (ls-files "../pod-ilmoraunio-conjtest/**/yaml")))
-        (is (= ["test-resources/test.yaml"
-                "test-resources/test.yml"
+        (is (= ["test-resources/.dockerignore"
                 "test-resources/hocon/hocon.conf"
+                "test-resources/test.edn"
                 "test-resources/test.json"
-                "test-resources/.dockerignore"
+                "test-resources/test.yaml"
+                "test-resources/test.yml"
                 "test-resources/yaml/combine.yaml"
-                "test-resources/yaml/lambda.yaml"
-                "test-resources/test.edn"]
-               (ls-files "../pod-ilmoraunio-conjtest/test-resources/**/")))))
-    (fs/delete "../file.test"))
+                "test-resources/yaml/lambda.yaml"]
+               (ls-files "../pod-ilmoraunio-conjtest/test-resources/**/"))))))
 
   (testing "absolute paths"
     (testing "no directory wildcard"
@@ -110,7 +125,7 @@
         (is (= ["deps.edn"]
                (ls-files (str (fs/cwd) "/deps.edn")))))
       (testing "wildcard in filename"
-        (is (= ["test.bb.edn" "deps.edn" "bb.edn" "bb.ci.edn"]
+        (is (= ["bb.ci.edn" "bb.edn" "cli-test.bb.edn" "deps.edn" "test.bb.edn"]
                (ls-files (str (fs/cwd) "/*.edn")))))
       (testing "no filename, directory given"
         (is (= ["/Users/ilmo.raunio/Devel/personal/pod-ilmoraunio-conjtest/test-resources/test.yaml"
@@ -131,6 +146,5 @@
         (is (= ["pod-ilmoraunio-conftest/test-resources/test.json" "test-resources/test.json"]
                (ls-files (str (fs/cwd) "/**/*.json"))))))
       (testing "no filename, directory given"
-        ;; FIXME
-        (is (= ["/Users/ilmo.raunio/Devel/personal/pod-ilmoraunio-conjtest/test-resources/hocon/hocon.conf"]
+        (is (= ["test-resources/hocon/hocon.conf"]
                (ls-files (str (fs/cwd) "/**/hocon")))))))

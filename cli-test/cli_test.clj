@@ -28,7 +28,7 @@
                                                                  [:selector #ordered/map([:app "hello-kubernetes"])])])
             "test-resources/.dockerignore" [[{"Original" ".idea", "Kind" "Path", "Value" ".idea"}
                                              {"Value" "", "Original" "", "Kind" "Empty"}]]}
-           (api/parse "test-resources/*{edn,json,yaml,yml,.dockerignore}"))))
+           (api/parse "test-resources/*{.edn,.json,.yaml,.yml,.dockerignore}"))))
   (testing "parse-as"
     (is (= {"test-resources/hocon/hocon.conf" {"play" {"editor" "<<unknown value>>",
                                                        "server" {"debug" {"addDebugInfoToRequests" false},
@@ -90,7 +90,7 @@
             "test-resources/.dockerignore" [[{"Kind" "Path", "Value" ".idea", "Original" ".idea"}
                                              {"Original" "", "Kind" "Empty", "Value" ""}]],
             "test-resources/test.edn" {":foo" ":bar", ":duration" "#duration 20m"}}
-           (api/parse-go "test-resources/*{edn,json,yaml,yml,.dockerignore}"))))
+           (api/parse-go "test-resources/*{.edn,.json,.yaml,.yml,.dockerignore}"))))
   (testing "parse-go-as"
     (is (= {"test-resources/test.edn" {":foo" ":bar", ":duration" "#duration 20m"}}
            (api/parse-go-as "edn" "test-resources/test.edn"))))
@@ -115,7 +115,7 @@
                                              {"Kind" "Empty", "Value" "", "Original" ""}]]}
            (api/parse "test-resources")
            (api/parse "test-resources/")
-           (api/parse "test-resources" "test-resources/" "test-resources/*{edn,json,yaml,yml,.dockerignore}"))))
+           (api/parse "test-resources" "test-resources/" "test-resources/*{.edn,.json,.yaml,.yml,.dockerignore}"))))
   (testing "yaml"
     (testing "support multi-documents"
       (is (= {"test-resources/yaml/combine.yaml" [#ordered/map([:apiVersion "apps/v1"]
