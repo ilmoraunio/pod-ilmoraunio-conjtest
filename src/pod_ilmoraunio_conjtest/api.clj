@@ -18,20 +18,21 @@
   [& dirs-or-filenames]
   (mapcat #(if (fs/directory? %)
              (fs/list-dirs [%] (fn [p] (and (fs/regular-file? p) (not (fs/executable? p)))))
-             (let [[relative-path filename] (split-with
-                                              (partial = "..")
-                                              (str/split
-                                                (str (fs/relativize
-                                                       (fs/cwd)
-                                                       (fs/canonicalize %)))
-                                                #"/"))]
-               (let [filepath (str/join "/" filename)]
+             (let [[relative-paths filename :as full-path] (split-with
+                                                             (partial = "..")
+                                                             (str/split
+                                                               (str (fs/relativize
+                                                                      (fs/cwd)
+                                                                      (fs/canonicalize %)))
+                                                               #"/"))]
+               (let [relative-path (str/join "/" relative-paths)
+                     filepath (str/join "/" filename)]
                  (if (re-find #"\*" filepath)
                    (filter fs/regular-file?
-                           (fs/glob (str/join "/" relative-path)
+                           (fs/glob relative-path
                                     filepath
                                     {:hidden true}))
-                   [(fs/file filepath)]))))
+                   [(fs/file (str/join "/" (mapcat identity full-path)))]))))
           dirs-or-filenames))
 
 (defn parse-go

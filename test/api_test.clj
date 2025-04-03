@@ -64,7 +64,6 @@
     (fs/create-file "../file.test")
     (testing "no directory wildcard"
       (testing "static filename"
-        ;; FIXME
         (is (= ["../file.test"]
                (ls-files "../file.test")))
         (is (= ["deps.edn"]
