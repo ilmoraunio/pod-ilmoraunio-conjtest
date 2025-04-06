@@ -13,8 +13,48 @@ This project uses [Break Versioning][breakver]. The version numbers follow a
 
 [breakver]: https://github.com/ptaoussanis/encore/blob/master/BREAK-VERSIONING.md
 
+## 0.0.3-SNAPSHOT
+
 ## 0.0.2
 
+- Tolerate reader tags
+  [03d9be6](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/03d9be6a26c774412342ef968203c89332e32672)
+- ci: WIP
+  [7c8d340](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/7c8d3405c23d1841052cd4d39bf82f2ce3206306)
+- Support hidden file retrieval from any dir
+  [b7c2019](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/b7c201994360ade4466c5f6a07e39192c45a4cac)
+- Add fn to parse using Go parsers only + enhance docs
+  [0d6dee0](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/0d6dee0d818d361995da7e57f824b26cdcb26e34)
+- Fix JSON keys starting with @
+  [ae39be7](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/ae39be7d7cc289ac68d4238ac0a8658c3e508b80)
+- Add fns to support specific parsers + improve docs
+  [1278611](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/12786114004784fbc0f2847e3c32df9a8b743107)
+- Support directories
+  [24934ad](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/24934adc3ecf08af1daed689ae1ea177c5d48601)
+- Add yaml clojure parser
+  [6e8d0f3](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/6e8d0f3d39d1dee8875c1907e1ae0c70ec90d6e0)
+- Support YAML multi-documents
+  [3577500](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/35775008002fb73fbc426b5445b966028de39f79)
+- Tolerate unknown tags when parsing yaml
+  [ccd6be3](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/ccd6be3662e51f67797111da55cb0d1bf8732f46)
+- Support yml files for clojure parser
+  [a91fc94](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/a91fc943af97b79bea352840509954231ef3bb73)
+- fix test
+  [5e0b2e6](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/5e0b2e690fcadfa16fa6e33d16609bf7c6b8ed4f)
+- Better support for relative paths
+  [1c1f330](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/1c1f3306983d72312aeb751bb4a35afec66a7a7b)
+- Fix missing rename
+  [db244ca](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/db244caec6e82cbd5bdc1aaecf5215d690269f02),
+  [2127588](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/21275881a124bb7dd91349e3fb8713340ac42a74)
+- Rename pod to pod-ilmoraunio-conjtest
+  [1fd40a1](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/1fd40a1bfd6570d98edd43f655a555972fec0fa6),
+  [6c74926](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/6c749262e53c4015d373686c1f5d71625dbac6f9)
+- No difference in perf: pmap->map
+  [8c63b46](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/8c63b46bb7b487501b4dec253af99ea669ab6997)
+- Optimization: don't run fs/glob for static paths
+  [f9514ac](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/f9514ac0ae93c50c49af31c73ac06f0371b7d95a)
+- Add documentation
+  [761c50a](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/761c50a09c2fba7cbfb4fc4a6ed8a1220e4d1118)
 - Fixes to relative & absolute paths
   [773a04d](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/773a04d0cdcd0a445862a7233d2277091c9a07d8)
 
