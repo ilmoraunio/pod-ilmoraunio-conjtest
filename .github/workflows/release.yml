@@ -23,18 +23,6 @@ jobs:
         uses: DeLaGuardo/setup-clojure@13.0
         with:
           bb: 1.3.190
-      - name: Install Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '^1.23.1'
-      - name: Initialize submodules
-        run: git submodule update --init --recursive
-      - name: Debug
-        run: go version && uname -a
-      - name: Install pod-ilmoraunio-conftest deps
-        run: cd pod-ilmoraunio-conftest && go install
-      - name: Build pod-ilmoraunio-conftest binary
-        run: cd pod-ilmoraunio-conftest && go build
       - name: Build uberjar
         run: bb uberjar target/pod-ilmoraunio-conjtest.jar -m pod-ilmoraunio-conjtest.core
       - name: Build binary
@@ -68,18 +56,6 @@ jobs:
         uses: DeLaGuardo/setup-clojure@13.0
         with:
           bb: 1.3.190
-      - name: Install Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '^1.23.1'
-      - name: Initialize submodules
-        run: git submodule update --init --recursive
-      - name: Debug
-        run: go version && uname -a
-      - name: Install pod-ilmoraunio-conftest deps
-        run: cd pod-ilmoraunio-conftest && go install
-      - name: Build pod-ilmoraunio-conftest binary
-        run: cd pod-ilmoraunio-conftest && go build
       - name: Build uberjar
         run: bb uberjar target/pod-ilmoraunio-conjtest.jar -m pod-ilmoraunio-conjtest.core
       - name: Build binary
