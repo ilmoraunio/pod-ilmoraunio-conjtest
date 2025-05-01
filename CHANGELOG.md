@@ -16,6 +16,9 @@ This project uses [Break Versioning][breakver]. The version numbers follow a
 ## 0.0.3-SNAPSHOT
 
 - Linux arm64 build [#2](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/pull/2) [f70f8f2](https://github.com/ilmoraunio/pod-conftest-clj/commit/f70f8f2e9b29112b6894e5a289c4f38b5c997513)
+- ci: Don't release artifact upon pull request [3539a85](https://github.com/ilmoraunio/pod-conftest-clj/commit/3539a85b2d60b8018653341689daf4815d924d2b)
+- ci: Bump checkout to v4 [2fd1d1f](https://github.com/ilmoraunio/pod-conftest-clj/commit/2fd1d1f7bc3dc12904b311e752d31bdb81044f47)
+- Use real pod version in README [8083782](https://github.com/ilmoraunio/pod-conftest-clj/commit/80837822839dd90bd8be44b16fc1026987c79811)
 
 ## 0.0.2
 
