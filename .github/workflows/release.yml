@@ -4,7 +4,7 @@ name: Release
 on: push
 
 jobs:
-  macos-build:
+  macos-arm64:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,7 +38,7 @@ jobs:
         run: bb --config bb.ci.edn release-artifact --file pod-ilmoraunio-conjtest-$VERSION-macos-aarch64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  linux-build:
+  linux-amd64:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
