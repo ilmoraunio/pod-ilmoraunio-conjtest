@@ -1,4 +1,4 @@
 {:paths ["src"]
- :pods {ilmoraunio/conftest {:version "0.0.2"}}
+ :pods {ilmoraunio/conftest {:version "0.0.3"}}
  #_#_:pods {pod-ilmoraunio-conftest {:path "pod-ilmoraunio-conftest/pod-ilmoraunio-conftest"
                                  :cache false}}}
