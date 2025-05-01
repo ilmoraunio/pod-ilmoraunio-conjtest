@@ -15,6 +15,8 @@ This project uses [Break Versioning][breakver]. The version numbers follow a
 
 ## 0.0.3-SNAPSHOT
 
+- Linux arm64 build [#2](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/pull/2) [f70f8f2](https://github.com/ilmoraunio/pod-conftest-clj/commit/f70f8f2e9b29112b6894e5a289c4f38b5c997513)
+
 ## 0.0.2
 
 - Tolerate reader tags
