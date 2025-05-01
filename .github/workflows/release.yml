@@ -100,9 +100,9 @@ jobs:
       - name: Debug
         run: ls -lart
       - name: Produce artifact
-        run: zip pod-ilmoraunio-conjtest-$VERSION-linux-amd64.zip pod-ilmoraunio-conjtest
+        run: zip pod-ilmoraunio-conjtest-$VERSION-linux-arm64.zip pod-ilmoraunio-conjtest
       - name: Release artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: bb --config bb.ci.edn release-artifact --file pod-ilmoraunio-conjtest-$VERSION-linux-amd64.zip
+        run: bb --config bb.ci.edn release-artifact --file pod-ilmoraunio-conjtest-$VERSION-linux-arm64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
