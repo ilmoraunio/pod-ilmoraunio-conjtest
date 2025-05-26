@@ -62,22 +62,24 @@
                    [(fs/file (str/join "/" (mapcat identity full-path)))]))))
           dirs-or-filenames))
 
+(def keywordize-fn keyword)
+
 (defn parse-go*
   "Attempts to parse `filenames` using only Go parsers. Will automatically try to determine parser based on filename extension.
 
   `opts` is an optional map and supports the following key(s):
 
-  | field     | description                                |
-  |-----------|--------------------------------------------|
-  | `:key-fn` | Single-arg fn that applies fn to all keys. |
-  |-----------|--------------------------------------------|
+  | field          | description                                                                      |
+  |----------------|----------------------------------------------------------------------------------|
+  | `:keywordize?` | Boolean flag to determine if the resulting parsed data keys should be keyworded. |
+  |----------------|----------------------------------------------------------------------------------|
 
   See: `parse-go`"
-  [{:keys [key-fn] :as _opts} & filenames]
+  [{:keys [keywordize?] :as _opts} & filenames]
   (let [files (apply ls-files filenames)
         result (apply conftest/parse (map str files))]
-    (if key-fn
-      (-walk-conftest-result result key-fn)
+    (if keywordize?
+      (-walk-conftest-result result keywordize-fn)
       result)))
 
 (defn parse-go
@@ -109,17 +111,17 @@
 
   `opts` is an optional map and supports the following key(s):
 
-  | field     | description                                |
-  |-----------|--------------------------------------------|
-  | `:key-fn` | Single-arg fn that applies fn to all keys. |
-  |-----------|--------------------------------------------|
+  | field          | description                                                           |
+  |----------------|-----------------------------------------------------------------------|
+  | `:keywordize?` | A boolean flag to determine if output map's keys should be keyworded. |
+  |----------------|-----------------------------------------------------------------------|
 
   See: `parse-go-as`"
-  [{:keys [key-fn] :as _opts} parser & filenames]
+  [{:keys [keywordize?] :as _opts} parser & filenames]
   (let [files (apply ls-files filenames)
         result (apply (partial conftest/parse-as parser) (map str files))]
-    (if key-fn
-      (-walk-conftest-result result key-fn)
+    (if keywordize?
+      (-walk-conftest-result result keywordize-fn)
       result)))
 
 (defn parse-go-as
@@ -145,7 +147,7 @@
   (apply parse-go-as* nil parser filenames))
 
 (defn -parse
-  [{:keys [key-fn] :as _opts} parser & filenames]
+  [{:keys [keywordize?] :as _opts} parser & filenames]
   (let [{parseable-files-with-native-parser true
          parseable-files-with-conftest-parser false}
         (group-by #(boolean (supported-native-parser (or parser (fs/extension %))))
@@ -156,20 +158,20 @@
                                                             contents (slurp filename)]
                                                         {filename (case parser
                                                                     "json" (json/decode contents
-                                                                                        (or key-fn
-                                                                                            (fn [k]
-                                                                                              (cond
-                                                                                                (clojure.string/starts-with? k "@") k
-                                                                                                :else (keyword k)))))
-                                                                    "edn" (let [parsed (edn-read contents)]
-                                                                            (if key-fn
-                                                                              (-walk-keys parsed key-fn)
-                                                                              parsed))
+                                                                                        ;; backwards compatibility
+                                                                                        (if (false? keywordize?)
+                                                                                          false
+                                                                                          (fn [k]
+                                                                                            (cond
+                                                                                              (clojure.string/starts-with? k "@") k
+                                                                                              :else (keyword k)))))
+                                                                    "edn" (edn-read contents)
                                                                     ("yaml" "yml") (let [parsed (yaml/parse-string contents {:unknown-tag-fn :value
                                                                                                                              :load-all true
                                                                                                                              :key-fn (fn [{:keys [key]}]
-                                                                                                                                       (if key-fn
-                                                                                                                                         (key-fn key)
+                                                                                                                                       ;; backwards compatibility
+                                                                                                                                       (if (false? keywordize?)
+                                                                                                                                         (identity key)
                                                                                                                                          (cond
                                                                                                                                            (clojure.string/starts-with? key "@") key
                                                                                                                                            (re-find #":" key) key
@@ -185,8 +187,8 @@
                                                                     (partial conftest/parse-as parser)
                                                                     conftest/parse)
                                                                   (map str parseable-files-with-conftest-parser))]
-                                                (if key-fn
-                                                  (-walk-conftest-result result key-fn)
+                                                (if keywordize?
+                                                  (-walk-conftest-result result keywordize-fn)
                                                   result))
                                               [])]
       (apply merge-with merge
@@ -202,10 +204,10 @@
 
   `opts` is an optional map and supports the following key(s):
 
-  | field     | description                                |
-  |-----------|--------------------------------------------|
-  | `:key-fn` | Single-arg fn that applies fn to all keys. |
-  |-----------|--------------------------------------------|
+  | field          | description                                                                      |
+  |----------------|----------------------------------------------------------------------------------|
+  | `:keywordize?` | Boolean flag to determine if the resulting parsed data keys should be keyworded. |
+  |----------------|----------------------------------------------------------------------------------|
 
   See: `parse`"
   [opts & filenames]
@@ -242,14 +244,14 @@
 
   `opts` is an optional map and supports the following key(s):
 
-  | field     | description                                |
-  |-----------|--------------------------------------------|
-  | `:key-fn` | Single-arg fn that applies fn to all keys. |
-  |-----------|--------------------------------------------|
+  | field          | description                                                                      |
+  |----------------|----------------------------------------------------------------------------------|
+  | `:keywordize?` | Boolean flag to determine if the resulting parsed data keys should be keyworded. |
+  |----------------|----------------------------------------------------------------------------------|
 
   See: `parse-as`"
   [opts parser & filenames]
-  (apply -parse opts nil parser filenames))
+  (apply -parse opts parser filenames))
 
 (defn parse-as
   "Attempts to parse `filenames` using `parser`, either using Clojure or Go parser (in this order, whichever is supported).

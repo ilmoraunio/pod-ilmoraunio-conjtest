@@ -61,7 +61,11 @@
                 "pod-ilmoraunio-conjtest.api/parse" (apply api/parse args)
                 "pod-ilmoraunio-conjtest.api/parse-as" (apply api/parse-as args)
                 "pod-ilmoraunio-conjtest.api/parse-go" (apply api/parse-go args)
-                "pod-ilmoraunio-conjtest.api/parse-go-as" (apply api/parse-go-as args))
+                "pod-ilmoraunio-conjtest.api/parse-go-as" (apply api/parse-go-as args)
+                "pod-ilmoraunio-conjtest.api/parse*" (apply api/parse* args)
+                "pod-ilmoraunio-conjtest.api/parse-as*" (apply api/parse-as* args)
+                "pod-ilmoraunio-conjtest.api/parse-go*" (apply api/parse-go* args)
+                "pod-ilmoraunio-conjtest.api/parse-go-as*" (apply api/parse-go-as* args))
         _ (debug "value" value)]
     {"value" (pr-str value)
      "id" id
