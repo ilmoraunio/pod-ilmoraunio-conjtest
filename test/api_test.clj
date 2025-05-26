@@ -48,10 +48,23 @@
                  "./bb.edn"
                  "./bb.ci.edn"}
                (ls-files ".")))
-        (is (= #{"test-resources/test.yaml"
+        (is (= #{"test-resources/test.hcl2.tf"
+                 "test-resources/test.yaml"
                  "test-resources/test.yml"
+                 "test-resources/test.jsonnet"
+                 "test-resources/test.spdx"
+                 "test-resources/test.ini"
                  "test-resources/test.json"
-                 "test-resources/.dockerignore"
+                 "test-resources/test.dockerignore"
+                 "test-resources/test.env"
+                 "test-resources/test.properties"
+                 "test-resources/test.xml"
+                 "test-resources/test.Dockerfile"
+                 "test-resources/test.hcl1.tf"
+                 "test-resources/test.cue"
+                 "test-resources/test.gitignore"
+                 "test-resources/test.vcl"
+                 "test-resources/test.toml"
                  "test-resources/test.edn"}
                (ls-files "test-resources")))))
     (testing "wildcard in directory"
@@ -110,10 +123,23 @@
         (is (= #{"test-resources/yaml/combine.yaml"
                  "test-resources/yaml/lambda.yaml"}
                (ls-files "../pod-ilmoraunio-conjtest/**/yaml")))
-        (is (= #{"test-resources/.dockerignore"
-                 "test-resources/hocon/hocon.conf"
+        (is (= #{"test-resources/hocon/hocon.conf"
+                 "test-resources/test.Dockerfile"
+                 "test-resources/test.cue"
+                 "test-resources/test.dockerignore"
                  "test-resources/test.edn"
+                 "test-resources/test.env"
+                 "test-resources/test.gitignore"
+                 "test-resources/test.hcl1.tf"
+                 "test-resources/test.hcl2.tf"
+                 "test-resources/test.ini"
                  "test-resources/test.json"
+                 "test-resources/test.jsonnet"
+                 "test-resources/test.properties"
+                 "test-resources/test.spdx"
+                 "test-resources/test.toml"
+                 "test-resources/test.vcl"
+                 "test-resources/test.xml"
                  "test-resources/test.yaml"
                  "test-resources/test.yml"
                  "test-resources/yaml/combine.yaml"
@@ -130,10 +156,23 @@
                (ls-files (str (fs/cwd) "/*.edn")))))
       (testing "no filename, directory given"
         (let [dir-from-root (str (fs/cwd) "/test-resources")]
-          (is (= #{(str dir-from-root "/test.yaml")
+          (is (= #{(str dir-from-root "/test.hcl2.tf")
+                   (str dir-from-root "/test.yaml")
                    (str dir-from-root "/test.yml")
+                   (str dir-from-root "/test.jsonnet")
+                   (str dir-from-root "/test.spdx")
+                   (str dir-from-root "/test.ini")
                    (str dir-from-root "/test.json")
-                   (str dir-from-root "/.dockerignore")
+                   (str dir-from-root "/test.dockerignore")
+                   (str dir-from-root "/test.env")
+                   (str dir-from-root "/test.properties")
+                   (str dir-from-root "/test.xml")
+                   (str dir-from-root "/test.Dockerfile")
+                   (str dir-from-root "/test.hcl1.tf")
+                   (str dir-from-root "/test.cue")
+                   (str dir-from-root "/test.gitignore")
+                   (str dir-from-root "/test.vcl")
+                   (str dir-from-root "/test.toml")
                    (str dir-from-root "/test.edn")}
                  (ls-files dir-from-root))))))
     (testing "wildcard in directory"
