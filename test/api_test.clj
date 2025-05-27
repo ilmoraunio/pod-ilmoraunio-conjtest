@@ -38,12 +38,10 @@
                 "./cli-test.bb.edn"
                 "./LICENSE"
                 "./CHANGELOG.md"
-                "./deps.edn"
                 "./Makefile"
                 "./.gitmodules"
                 "./README.md"
                 "./.gitignore"
-                "./package.json"
                 "./bb.edn"
                 "./bb.ci.edn"]
                (ls-files ".")))
@@ -75,7 +73,7 @@
         (is (= ["bb.edn"]
                (ls-files "bb.edn"))))
       (testing "wildcard in filename"
-        (is (= ["bb.ci.edn" "bb.edn" "cli-test.bb.edn" "deps.edn" "test.bb.edn"]
+        (is (= ["bb.ci.edn" "bb.edn" "cli-test.bb.edn" "test.bb.edn"]
                (ls-files "*.edn"))))))
 
   (testing "relative, backtracking paths"
@@ -83,12 +81,12 @@
       (testing "static filename"
         (is (= ["../file.test"]
                (ls-files "../file.test")))
-        (is (= ["deps.edn"]
-               (ls-files "test-resources/../deps.edn"))))
+        (is (= ["bb.edn"]
+               (ls-files "test-resources/../bb.edn"))))
       (testing "wildcard in filename"
         (is (= ["../file.test"]
                (ls-files "../*.test")))
-        (is (= ["bb.ci.edn" "bb.edn" "cli-test.bb.edn" "deps.edn" "test.bb.edn"]
+        (is (= ["bb.ci.edn" "bb.edn" "cli-test.bb.edn" "test.bb.edn"]
                (ls-files "test-resources/../*.edn"))))
       (testing "no filename, directory given"
         (is (= ["../pod-ilmoraunio-conjtest/test-resources/yaml/combine.yaml"
@@ -122,10 +120,10 @@
   (testing "absolute paths"
     (testing "no directory wildcard"
       (testing "static filename"
-        (is (= ["deps.edn"]
-               (ls-files (str (fs/cwd) "/deps.edn")))))
+        (is (= ["bb.edn"]
+               (ls-files (str (fs/cwd) "/bb.edn")))))
       (testing "wildcard in filename"
-        (is (= ["bb.ci.edn" "bb.edn" "cli-test.bb.edn" "deps.edn" "test.bb.edn"]
+        (is (= ["bb.ci.edn" "bb.edn" "cli-test.bb.edn" "test.bb.edn"]
                (ls-files (str (fs/cwd) "/*.edn")))))
       (testing "no filename, directory given"
         (is (= ["/Users/ilmo.raunio/Devel/personal/pod-ilmoraunio-conjtest/test-resources/test.yaml"
