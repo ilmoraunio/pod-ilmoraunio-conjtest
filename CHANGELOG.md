@@ -16,7 +16,7 @@ This project uses [Break Versioning][breakver]. The version numbers follow a
 ## 0.0.4-SNAPSHOT
 
 - ci: fail step if tests fail [40a370b](https://github.com/ilmoraunio/pod-conftest-clj/commit/40a370bff17b702600b8f354e60a1b1c9b4111ab)
-- ci: drop redundant files & fix tests [12b1f90](https://github.com/ilmoraunio/pod-conftest-clj/commit/12b1f90da4a930924ea8affa4fb443bde3921951) [b61ed52](https://github.com/ilmoraunio/pod-conftest-clj/commit/b61ed528bf9ff754978fc5d3d484d4b403ab07a4)
+- ci: drop redundant files & fix tests
 
 ## 0.0.3
 
