@@ -18,6 +18,9 @@
   (f)
   (delete-file))
 
+(def project-dir
+  (last (str/split (str (fs/cwd)) #"/")))
+
 (use-fixtures :once file-fixture)
 
 (defn ls-files
@@ -89,20 +92,20 @@
         (is (= ["bb.ci.edn" "bb.edn" "cli-test.bb.edn" "test.bb.edn"]
                (ls-files "test-resources/../*.edn"))))
       (testing "no filename, directory given"
-        (is (= ["../pod-ilmoraunio-conjtest/test-resources/yaml/combine.yaml"
-                "../pod-ilmoraunio-conjtest/test-resources/yaml/lambda.yaml"]
-               (ls-files "../pod-ilmoraunio-conjtest/test-resources/yaml")))))
+        (is (= [(format "../%s/test-resources/yaml/combine.yaml" project-dir)
+                (format "../%s/test-resources/yaml/lambda.yaml" project-dir)]
+               (ls-files (format "../%s/test-resources/yaml" project-dir))))))
     (testing "wildcard in directory"
       (testing "static filename"
         (is (= ["test-resources/hocon/hocon.conf"]
                (ls-files "../*/test-resources/hocon/hocon.conf")))
         (is (= ["pod-ilmoraunio-conftest/test-resources/hocon.conf" "test-resources/hocon/hocon.conf"]
-               (ls-files "../pod-ilmoraunio-conjtest/**/hocon.conf"))))
+               (ls-files (format "../%s/**/hocon.conf" project-dir)))))
       (testing "wildcard in filename"
         (is (= ["test-resources/hocon/hocon.conf"]
                (ls-files "../*/test-resources/hocon/*.conf")))
         (is (= ["pod-ilmoraunio-conftest/test-resources/hocon.conf" "test-resources/hocon/hocon.conf"]
-               (ls-files "../pod-ilmoraunio-conjtest/**/*.conf"))))
+               (ls-files (format "../%s/**/*.conf" project-dir)))))
       (testing "no filename, directory given"
         (is (= ["test-resources/yaml/combine.yaml"
                 "test-resources/yaml/lambda.yaml"]
@@ -115,7 +118,7 @@
                 "test-resources/test.yml"
                 "test-resources/yaml/combine.yaml"
                 "test-resources/yaml/lambda.yaml"]
-               (ls-files "../pod-ilmoraunio-conjtest/test-resources/**/"))))))
+               (ls-files (format "../%s/test-resources/**/" project-dir)))))))
 
   (testing "absolute paths"
     (testing "no directory wildcard"
