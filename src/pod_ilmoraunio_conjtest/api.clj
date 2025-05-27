@@ -22,7 +22,7 @@
 
 (defn -walk-conftest-result
   [conftest-result key-fn]
-  (into {}
+  (into (sorted-map)
         (map (fn [[filename data]]
                [filename (-walk-keys data key-fn)])
              conftest-result)))
@@ -62,7 +62,7 @@
                    [(fs/file (str/join "/" (mapcat identity full-path)))]))))
           dirs-or-filenames))
 
-(def keywordize-fn keyword)
+(def -keywordize-fn keyword)
 
 (defn parse-go*
   "Attempts to parse `filenames` using only Go parsers. Will automatically try to determine parser based on filename extension.
@@ -79,7 +79,7 @@
   (let [files (apply ls-files filenames)
         result (apply conftest/parse (map str files))]
     (if keywordize?
-      (-walk-conftest-result result keywordize-fn)
+      (-walk-conftest-result result -keywordize-fn)
       result)))
 
 (defn parse-go
@@ -121,7 +121,7 @@
   (let [files (apply ls-files filenames)
         result (apply (partial conftest/parse-as parser) (map str files))]
     (if keywordize?
-      (-walk-conftest-result result keywordize-fn)
+      (-walk-conftest-result result -keywordize-fn)
       result)))
 
 (defn parse-go-as
@@ -188,7 +188,7 @@
                                                                     conftest/parse)
                                                                   (map str parseable-files-with-conftest-parser))]
                                                 (if keywordize?
-                                                  (-walk-conftest-result result keywordize-fn)
+                                                  (-walk-conftest-result result -keywordize-fn)
                                                   result))
                                               [])]
       (apply merge-with merge
