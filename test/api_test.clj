@@ -129,12 +129,13 @@
         (is (= ["bb.ci.edn" "bb.edn" "cli-test.bb.edn" "test.bb.edn"]
                (ls-files (str (fs/cwd) "/*.edn")))))
       (testing "no filename, directory given"
-        (is (= ["/Users/ilmo.raunio/Devel/personal/pod-ilmoraunio-conjtest/test-resources/test.yaml"
-                "/Users/ilmo.raunio/Devel/personal/pod-ilmoraunio-conjtest/test-resources/test.yml"
-                "/Users/ilmo.raunio/Devel/personal/pod-ilmoraunio-conjtest/test-resources/test.json"
-                "/Users/ilmo.raunio/Devel/personal/pod-ilmoraunio-conjtest/test-resources/.dockerignore"
-                "/Users/ilmo.raunio/Devel/personal/pod-ilmoraunio-conjtest/test-resources/test.edn"]
-               (ls-files (str (fs/cwd) "/test-resources"))))))
+        (let [dir-from-root (str (fs/cwd) "/test-resources")]
+          (is (= [(str dir-from-root "/test.yaml")
+                  (str dir-from-root "/test.yml")
+                  (str dir-from-root "/test.json")
+                  (str dir-from-root "/.dockerignore")
+                  (str dir-from-root "/test.edn")]
+                 (ls-files dir-from-root))))))
     (testing "wildcard in directory"
       (testing "static filename"
         (is (= ["test-resources/test.json"]
