@@ -5,10 +5,27 @@
             [clj-yaml.core :as yaml]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [clojure.walk :as walk])
   (:import (java.io PushbackReader)))
 
 (def supported-native-parser #{"json" "edn" "yaml" "yml"})
+
+(defn -walk-keys
+  [parsed key-fn]
+  (walk/postwalk
+    (fn [x]
+      (if (map? x)
+        (into {} (map (fn [[k v]] [(key-fn k) v]) x))
+        x))
+    parsed))
+
+(defn -walk-conftest-result
+  [conftest-result key-fn]
+  (into (sorted-map)
+        (map (fn [[filename data]]
+               [filename (-walk-keys data key-fn)])
+             conftest-result)))
 
 (defn edn-read
   [s]
@@ -45,6 +62,26 @@
                    [(fs/file (str/join "/" (mapcat identity full-path)))]))))
           dirs-or-filenames))
 
+(def -keywordize-fn keyword)
+
+(defn parse-go*
+  "Attempts to parse `filenames` using only Go parsers. Will automatically try to determine parser based on filename extension.
+
+  `opts` is an optional map and supports the following key(s):
+
+  | field          | description                                                                      |
+  |----------------|----------------------------------------------------------------------------------|
+  | `:keywordize?` | Boolean flag to determine if the resulting parsed data keys should be keyworded. |
+  |----------------|----------------------------------------------------------------------------------|
+
+  See: `parse-go`"
+  [{:keys [keywordize?] :as _opts} & filenames]
+  (let [files (apply ls-files filenames)
+        result (apply conftest/parse (map str files))]
+    (if keywordize?
+      (-walk-conftest-result result -keywordize-fn)
+      result)))
+
 (defn parse-go
   "Attempts to parse `filenames` using only Go parsers. Will automatically try to determine parser based on filename extension.
 
@@ -67,8 +104,25 @@
     \"test-resources/test.edn\" {\":foo\" \":bar\", \":duration\" \"#duration 20m\"}}
    ```"
   [& filenames]
-  (let [files (apply ls-files filenames)]
-    (apply conftest/parse (map str files))))
+  (apply parse-go* nil filenames))
+
+(defn parse-go-as*
+  "Attempts to parse `filenames` using `parser`. Uses only Go parsers.
+
+  `opts` is an optional map and supports the following key(s):
+
+  | field          | description                                                           |
+  |----------------|-----------------------------------------------------------------------|
+  | `:keywordize?` | A boolean flag to determine if output map's keys should be keyworded. |
+  |----------------|-----------------------------------------------------------------------|
+
+  See: `parse-go-as`"
+  [{:keys [keywordize?] :as _opts} parser & filenames]
+  (let [files (apply ls-files filenames)
+        result (apply (partial conftest/parse-as parser) (map str files))]
+    (if keywordize?
+      (-walk-conftest-result result -keywordize-fn)
+      result)))
 
 (defn parse-go-as
   "Attempts to parse `filenames` using `parser`. Uses only Go parsers.
@@ -90,11 +144,10 @@
     \"test-resources/test.json\" {\"@foo\" \"bar\", \"hello\" [1.0 2.0 4.0]}}
    ```"
   [parser & filenames]
-  (let [files (apply ls-files filenames)]
-    (apply (partial conftest/parse-as parser) (map str files))))
+  (apply parse-go-as* nil parser filenames))
 
 (defn -parse
-  [parser & filenames]
+  [{:keys [keywordize?] :as _opts} parser & filenames]
   (let [{parseable-files-with-native-parser true
          parseable-files-with-conftest-parser false}
         (group-by #(boolean (supported-native-parser (or parser (fs/extension %))))
@@ -105,18 +158,24 @@
                                                             contents (slurp filename)]
                                                         {filename (case parser
                                                                     "json" (json/decode contents
-                                                                                        (fn [k]
-                                                                                          (cond
-                                                                                            (clojure.string/starts-with? k "@") k
-                                                                                            :else (keyword k))))
+                                                                                        ;; backwards compatibility
+                                                                                        (if (false? keywordize?)
+                                                                                          false
+                                                                                          (fn [k]
+                                                                                            (cond
+                                                                                              (clojure.string/starts-with? k "@") k
+                                                                                              :else (keyword k)))))
                                                                     "edn" (edn-read contents)
                                                                     ("yaml" "yml") (let [parsed (yaml/parse-string contents {:unknown-tag-fn :value
                                                                                                                              :load-all true
                                                                                                                              :key-fn (fn [{:keys [key]}]
-                                                                                                                                       (cond
-                                                                                                                                         (clojure.string/starts-with? key "@") key
-                                                                                                                                         (re-find #":" key) key
-                                                                                                                                         :else (keyword key)))})]
+                                                                                                                                       ;; backwards compatibility
+                                                                                                                                       (if (false? keywordize?)
+                                                                                                                                         (identity key)
+                                                                                                                                         (cond
+                                                                                                                                           (clojure.string/starts-with? key "@") key
+                                                                                                                                           (re-find #":" key) key
+                                                                                                                                           :else (keyword key))))})]
                                                                                      (if (= (count parsed) 1)
                                                                                        (first parsed)
                                                                                        parsed)))}))
@@ -124,10 +183,13 @@
                                                (mapcat identity)
                                                (into {}))
           files-parsed-with-conftest-parser (if (seq parseable-files-with-conftest-parser)
-                                              (apply (if (some? parser)
-                                                       (partial conftest/parse-as parser)
-                                                       conftest/parse)
-                                                     (map str parseable-files-with-conftest-parser))
+                                              (let [result (apply (if (some? parser)
+                                                                    (partial conftest/parse-as parser)
+                                                                    conftest/parse)
+                                                                  (map str parseable-files-with-conftest-parser))]
+                                                (if keywordize?
+                                                  (-walk-conftest-result result -keywordize-fn)
+                                                  result))
                                               [])]
       (apply merge-with merge
              (cond-> []
@@ -136,6 +198,20 @@
 
                (seq files-parsed-with-conftest-parser)
                (conj files-parsed-with-conftest-parser))))))
+
+(defn parse*
+  "Attempts to parse `filenames` using either Clojure or Go parsers (in this order, whichever is supported).
+
+  `opts` is an optional map and supports the following key(s):
+
+  | field          | description                                                                      |
+  |----------------|----------------------------------------------------------------------------------|
+  | `:keywordize?` | Boolean flag to determine if the resulting parsed data keys should be keyworded. |
+  |----------------|----------------------------------------------------------------------------------|
+
+  See: `parse`"
+  [opts & filenames]
+  (apply -parse opts nil filenames))
 
 (defn parse
   "Attempts to parse `filenames` using either Clojure or Go parsers (in this order, whichever is supported).
@@ -161,7 +237,21 @@
     \"test-resources/test.edn\" {:foo :bar, :duration \"#duration 20m\"}}
    ```"
   [& filenames]
-  (apply -parse nil filenames))
+  (apply -parse nil nil filenames))
+
+(defn parse-as*
+  "Attempts to parse `filenames` using `parser`, either using Clojure or Go parser (in this order, whichever is supported).
+
+  `opts` is an optional map and supports the following key(s):
+
+  | field          | description                                                                      |
+  |----------------|----------------------------------------------------------------------------------|
+  | `:keywordize?` | Boolean flag to determine if the resulting parsed data keys should be keyworded. |
+  |----------------|----------------------------------------------------------------------------------|
+
+  See: `parse-as`"
+  [opts parser & filenames]
+  (apply -parse opts parser filenames))
 
 (defn parse-as
   "Attempts to parse `filenames` using `parser`, either using Clojure or Go parser (in this order, whichever is supported).
@@ -184,4 +274,4 @@
     \"test-resources/test.json\" {:hello (1 2 4), \"@foo\" \"bar\"}}
    ```"
   [parser & filenames]
-  (apply -parse parser filenames))
+  (apply -parse nil parser filenames))
