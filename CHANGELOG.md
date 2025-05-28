@@ -15,6 +15,7 @@ This project uses [Break Versioning][breakver]. The version numbers follow a
 
 ## 0.0.4-SNAPSHOT
 
+- Support keyworded keys via `keywordize?` [#3](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/pull/3)
 - fix: incorrect conftest version running for tests [0abc0eb](https://github.com/ilmoraunio/pod-conftest-clj/commit/0abc0ebd8ac857ed3591c3469d4f8a517235111c)
 - ci: fail step if tests fail [40a370b](https://github.com/ilmoraunio/pod-conftest-clj/commit/40a370bff17b702600b8f354e60a1b1c9b4111ab)
 - ci: drop redundant files & fix tests
