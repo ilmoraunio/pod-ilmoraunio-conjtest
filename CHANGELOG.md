@@ -13,7 +13,7 @@ This project uses [Break Versioning][breakver]. The version numbers follow a
 
 [breakver]: https://github.com/ptaoussanis/encore/blob/master/BREAK-VERSIONING.md
 
-## 0.0.4-SNAPSHOT
+## 0.0.4
 
 - Support keyworded keys via `keywordize?` [#3](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/pull/3)
 - fix: incorrect conftest version running for tests [0abc0eb](https://github.com/ilmoraunio/pod-conftest-clj/commit/0abc0ebd8ac857ed3591c3469d4f8a517235111c)
