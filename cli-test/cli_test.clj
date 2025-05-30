@@ -548,7 +548,10 @@
                (api/parse-go* {:keywordize? true} "test-resources/test.cue")
                (api/parse-as* {:keywordize? true} "cue" "test-resources/test.cue")
                (api/parse-go-as* {:keywordize? true} "cue" "test-resources/test.cue"))))
-
+      (testing "edn"
+        (is (= {"test-resources/test.edn" {:foo ":bar", :duration "#duration 20m"}}
+               (api/parse-go* {:keywordize? true} "test-resources/test.edn")
+               (api/parse-go-as* {:keywordize? true} "edn" "test-resources/test.edn"))))
       (testing "hocon"
         (= {"test-resources/hocon/hocon.conf" {:play {:editor "<<unknown value>>",
                                                       :server {:https {:keyStore {:algorithm "<<unknown value>>",

@@ -62,7 +62,9 @@
                    [(fs/file (str/join "/" (mapcat identity full-path)))]))))
           dirs-or-filenames))
 
-(def -keywordize-fn keyword)
+(def -keywordize-fn
+  ;; handles edge case with go edn parser
+  #(some-> % (str/replace #"^:" "") (keyword)))
 
 (defn parse-go*
   "Attempts to parse `filenames` using only Go parsers. Will automatically try to determine parser based on filename extension.
