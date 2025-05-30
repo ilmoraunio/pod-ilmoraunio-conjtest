@@ -33,7 +33,6 @@ optional `opts` map, which accepts the following options:
 | field          | description                                                           |
 |----------------|-----------------------------------------------------------------------|
 | `:keywordize?` | A boolean flag to determine if output map's keys should be keyworded. |
-|----------------|-----------------------------------------------------------------------|
 
 Each function will return a map of filenames to parsed configurations, eg:
 
