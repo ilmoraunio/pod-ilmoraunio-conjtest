@@ -13,6 +13,8 @@ This project uses [Break Versioning][breakver]. The version numbers follow a
 
 [breakver]: https://github.com/ptaoussanis/encore/blob/master/BREAK-VERSIONING.md
 
+## 0.0.6-SNAPSHOT
+
 ## 0.0.5
 
 - Keywordize EDN keys correctly when using Go parser [#5](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/pull/5)
