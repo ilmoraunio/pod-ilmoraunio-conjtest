@@ -1,4 +1,4 @@
-{:pods {ilmoraunio/conftest {:version "0.0.3"}}
+{:pods {ilmoraunio/conftest {:version "0.1.0"}}
  :tasks
  {test:integration {:extra-paths ["src" "test"]
                     :extra-deps {io.github.cognitect-labs/test-runner
