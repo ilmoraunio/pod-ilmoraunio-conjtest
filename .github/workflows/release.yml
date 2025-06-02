@@ -20,7 +20,7 @@ jobs:
       - name: Read version to environment
         run: echo "VERSION=$(cat resources/POD_ILMORAUNIO_CONJTEST)" >> $GITHUB_ENV
       - name: Install babashka
-        uses: DeLaGuardo/setup-clojure@13.0
+        uses: DeLaGuardo/setup-clojure@13.2
         with:
           bb: 1.3.190
       - name: Build uberjar
@@ -54,7 +54,7 @@ jobs:
       - name: Read version to environment
         run: echo "VERSION=$(cat resources/POD_ILMORAUNIO_CONJTEST)" >> $GITHUB_ENV
       - name: Install babashka
-        uses: DeLaGuardo/setup-clojure@13.0
+        uses: DeLaGuardo/setup-clojure@13.2
         with:
           bb: 1.3.190
       - name: Build uberjar
@@ -88,7 +88,7 @@ jobs:
       - name: Read version to environment
         run: echo "VERSION=$(cat resources/POD_ILMORAUNIO_CONJTEST)" >> $GITHUB_ENV
       - name: Install babashka
-        uses: DeLaGuardo/setup-clojure@13.0
+        uses: DeLaGuardo/setup-clojure@13.2
         with:
           bb: 1.3.190
       - name: Build uberjar
