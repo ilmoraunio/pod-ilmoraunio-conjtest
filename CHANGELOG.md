@@ -13,7 +13,7 @@ This project uses [Break Versioning][breakver]. The version numbers follow a
 
 [breakver]: https://github.com/ptaoussanis/encore/blob/master/BREAK-VERSIONING.md
 
-## 0.0.6-SNAPSHOT
+## 0.1.0-SNAPSHOT
 
 ## 0.0.5
 
