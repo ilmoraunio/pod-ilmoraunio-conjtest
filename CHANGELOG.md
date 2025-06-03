@@ -13,7 +13,11 @@ This project uses [Break Versioning][breakver]. The version numbers follow a
 
 [breakver]: https://github.com/ptaoussanis/encore/blob/master/BREAK-VERSIONING.md
 
-## 0.1.0-SNAPSHOT
+## 0.1.0
+
+- BREAKING: Upgrade ilmoraunio/conftest to 0.1.0 [#6](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/pull/6)
+  - The output of HCL2 changes slightly. See open-policy-agent/conftest#1074
+    and open-policy-agent/conftest#1006 for more info.
 
 ## 0.0.5
 
