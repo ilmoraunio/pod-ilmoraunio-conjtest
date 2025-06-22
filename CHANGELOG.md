@@ -15,6 +15,8 @@ This project uses [Break Versioning][breakver]. The version numbers follow a
 
 ## 0.1.1-SNAPSHOT
 
+- Upgrade babashka to v1.12.203 [7ae6025](https://github.com/ilmoraunio/pod-conftest-clj/commit/7ae6025acd119abadd0ab118a3dbfef2382603fb)
+
 ## 0.1.0
 
 - BREAKING: Upgrade ilmoraunio/conftest to 0.1.0 [#6](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/pull/6)
