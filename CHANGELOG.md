@@ -13,7 +13,7 @@ This project uses [Break Versioning][breakver]. The version numbers follow a
 
 [breakver]: https://github.com/ptaoussanis/encore/blob/master/BREAK-VERSIONING.md
 
-## 0.1.1-SNAPSHOT
+## 0.1.1
 
 - Upgrade babashka to v1.12.203 [7ae6025](https://github.com/ilmoraunio/pod-conftest-clj/commit/7ae6025acd119abadd0ab118a3dbfef2382603fb)
 
