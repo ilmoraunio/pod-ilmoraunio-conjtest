@@ -10,7 +10,7 @@ Clojure/babashka parsers and parsers from
 (ns my-ns
   (:require [babashka.pods :as pods]))
 
-(pods/load-pod 'ilmoraunio/conjtest "0.1.1")
+(pods/load-pod 'ilmoraunio/conjtest "0.1.2")
 (require '[pod-ilmoraunio-conjtest.api :as api])
 ```
 

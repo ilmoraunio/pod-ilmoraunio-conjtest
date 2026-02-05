@@ -13,7 +13,7 @@ This project uses [Break Versioning][breakver]. The version numbers follow a
 
 [breakver]: https://github.com/ptaoussanis/encore/blob/master/BREAK-VERSIONING.md
 
-## 0.1.2-SNAPSHOT
+## 0.1.2
 
 - Upgrade babashka to v1.12.214 [3f3f6e6](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/3f3f6e65312a9083109791e71719357d331b3de4)
 - Upgrade ilmoraunio/conftest to 0.1.2 [f22a988](https://github.com/ilmoraunio/pod-ilmoraunio-conjtest/commit/f22a988f66d9c3405c1982c596a3ec3eb9cf8b01)
