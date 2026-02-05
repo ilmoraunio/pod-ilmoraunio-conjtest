@@ -22,7 +22,7 @@ jobs:
       - name: Install babashka
         uses: DeLaGuardo/setup-clojure@13.2
         with:
-          bb: 1.12.203
+          bb: 1.12.214
       - name: Build uberjar
         run: bb uberjar target/pod-ilmoraunio-conjtest.jar -m pod-ilmoraunio-conjtest.core
       - name: Build binary
@@ -56,7 +56,7 @@ jobs:
       - name: Install babashka
         uses: DeLaGuardo/setup-clojure@13.2
         with:
-          bb: 1.12.203
+          bb: 1.12.214
       - name: Build uberjar
         run: bb uberjar target/pod-ilmoraunio-conjtest.jar -m pod-ilmoraunio-conjtest.core
       - name: Build binary
@@ -90,7 +90,7 @@ jobs:
       - name: Install babashka
         uses: DeLaGuardo/setup-clojure@13.2
         with:
-          bb: 1.12.203
+          bb: 1.12.214
       - name: Build uberjar
         run: bb uberjar target/pod-ilmoraunio-conjtest.jar -m pod-ilmoraunio-conjtest.core
       - name: Build binary
